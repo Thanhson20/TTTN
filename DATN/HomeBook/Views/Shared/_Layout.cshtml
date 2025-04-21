@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HomeBook</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HomeBook.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+
+
+    <!-- style -->
+
+    <link href="~/css/style.css" rel="stylesheet" type="text/css">
+
+    <!-- style -->
+    <!-- bootstrap -->
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- responsive -->
+
+    <link href="~/css/responsive.css" rel="stylesheet" type="text/css">
+
+    <!-- font-awesome -->
+
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- font-awesome -->
+
+    <link href="~/css/effects/set2.css" rel="stylesheet" type="text/css">
+
+    <link href="~/css/effects/normalize.css" rel="stylesheet" type="text/css">
+
+    <link href="~/css/effects/component.css" rel="stylesheet" type="text/css">
+    <style>
+        .main-header {
+            background-color: #fff;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a img {
+            max-width: 100px;
+            display: block;
+        }
+
+        .nav-menu-container {
+            /* Không cần gì thêm ở đây trừ khi muốn custom thêm */
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            font-weight: 600;
+            font-size: 16px;
+            color: #404040;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .nav-item a:hover,
+            .nav-item.nav-active a {
+                color: #fb5353;
+            }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            border: 1px solid #fb5353;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            color: #333;
+        }
+
+            .dropdown-item:hover {
+                background-color: #fb5353;
+                color: white;
+            }
+
+        .dropdown-divider {
+            border-top: 1px solid #fb5353;
+        }
+
+        .nav-link.dropdown-toggle {
+            color: #fb5353 !important;
+            display: flex;
+            align-items: center;
+        }
+
+            .nav-link.dropdown-toggle:hover {
+                color: #d94242 !important;
+            }
+
+        .bi-person-circle {
+            font-size: 1.5rem;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-container">
+            <h1 class="logo">
+                <a asp-controller="Home" asp-action="Index" title="avana LLC">
+                    <img src="~/logo.png" alt="avana LLC" />
+                </a>
+            </h1>
+
+            <nav class="nav-menu-container">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a asp-controller="Home" asp-action="Index" title="Work">Trang chủ</a></li>
+                    <li class="nav-item"><a asp-controller="Home" asp-action="Privacy" title="About">Giới thiệu</a></li>
+                    <li class="nav-item"><a asp-controller="Books" asp-action="Index" title="Blog">Sản phẩm</a></li>
+                    <li class="nav-item"><a asp-controller="Contacts" asp-action="Create" title="Contact">Liên hệ</a></li>
+                    <li class="nav-item dropdown">
+                        @if (Context.Session.GetString("CustomerLogin") != null)
+                        {
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1"></i>
+                                <span class="d-none d-md-inline">@Context.Session.GetString("CustomerLogin")</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-controller="Customers" asp-action="Details"><i class="bi bi-person me-2"></i>Thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index"><i class="bi bi-receipt me-2"></i>Đơn hàng</a></li>
+                                <li><a class="dropdown-item" asp-controller="Carts" asp-action="Index"><i class="bi bi-cart me-2"></i>Giỏ hàng</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="LoginC" asp-action="Logout"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1"></i>
+                                <span class="d-none d-md-inline">Tài khoản</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-controller="LoginC" asp-action="Index"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a></li>
+                                <li><a class="dropdown-item" asp-controller="Customers" asp-action="Create"><i class="bi bi-person-plus me-2"></i>Đăng ký</a></li>
+                            </ul>
+                        }
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div>
+        <main role="main-home-wrapper" class="container">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer role="footer">
+
+        <!-- logo -->
+
+        <h1>
+
+            <a href="index.html" title="avana LLC"><img src="~/images/logo.png" title="avana LLC" alt="avana LLC" /></a>
+
+        </h1>
+
+        <!-- logo -->
+        <!-- nav -->
+
+        <nav role="footer-nav">
+
+            <ul>
+
+                <li><a href="index.html" title="Work">Work</a></li>
+
+                <li><a href="about.html" title="About">About</a></li>
+
+                <li><a href="blog.html" title="Blog">Blog</a></li>
+
+                <li><a href="contact.html" title="Contact">Contact</a></li>
+
+            </ul>
+
+        </nav>
+
+        <!-- nav -->
+
+        <ul role="social-icons">
+
+            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+
+            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+
+            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+
+            <li><a href="#"><i class="fa fa-flickr" aria-hidden="true"></i></a></li>
+
+        </ul>
+
+        <p class="copy-right">&copy; 2015  avana LLC.. All rights Resved</p>
+
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

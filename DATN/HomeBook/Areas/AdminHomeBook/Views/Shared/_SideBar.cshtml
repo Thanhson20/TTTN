@@ -1,0 +1,438 @@
+﻿﻿﻿﻿@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<style>
+    /* Sidebar styling for HomeBook Admin Management */
+    .main-sidebar {
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        height: 100vh;
+        width: 250px;
+        transition: all 0.3s ease;
+    }
+
+    .brand-link {
+        background-color: #fb5353 !important;
+        color: #ffffff !important;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #d43f3f;
+    }
+
+        .brand-link img {
+            max-width: 60px;
+            margin-right: 10px;
+        }
+
+    .brand-text {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .sidebar {
+        padding-top: 20px;
+        overflow-y: auto;
+    }
+
+    .user-panel {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-top: 1px solid #fb5353;
+        display: flex;
+        align-items: center;
+        bottom: 0;
+        z-index: 1000;
+    }
+
+        .user-panel .image img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-panel .info a {
+            color: #404040;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .user-panel .info .logout-link {
+            color: #fb5353;
+            font-size: 14px;
+            display: block;
+            margin-top: 5px;
+        }
+
+            .user-panel .info .logout-link:hover {
+                color: #d43f3f;
+                text-decoration: underline;
+            }
+
+    .nav-sidebar .nav-item .nav-link {
+        color: #404040;
+        padding: 10px 15px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .nav-sidebar .nav-item .nav-link:hover {
+            background-color: #fb5353;
+            color: #ffffff;
+        }
+
+        .nav-sidebar .nav-item .nav-link i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+    .nav-sidebar .nav-treeview .nav-link {
+        padding-left: 40px;
+        font-size: 14px;
+        color: #606060;
+    }
+
+        .nav-sidebar .nav-treeview .nav-link:hover {
+            background-color: #ffe6e6;
+            color: #fb5353;
+        }
+
+    .nav-sidebar .nav-item .nav-link .right {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-sidebar .nav-item.menu-open .nav-link .right {
+        transform: rotate(-180deg);
+    }
+
+    .icon-container {
+        width: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Custom icons for HomeBook theme */
+    .nav-item .nav-link i.fa-user-tie::before {
+        content: "\f508"; /* Admin icon */
+    }
+
+    .nav-item .nav-link i.fa-house-user::before {
+        content: "\f02d"; /* Book icon for customers and books */
+    }
+
+    .nav-item .nav-link i.fa-list::before {
+        content: "\f0e0"; /* Envelope icon for contacts */
+    }
+
+    .nav-treeview .nav-link i.fa-edit::before {
+        content: "\f03a"; /* List icon for index */
+    }
+
+    .nav-treeview .nav-link i.fa-plus-circle::before {
+        content: "\f055"; /* Plus icon for create */
+    }
+
+    /* Specific icon overrides for different sections */
+    .nav-item:nth-child(5) .nav-link i.fa-list::before {
+        content: "\f1ea"; /* Newspaper icon for publishers */
+    }
+
+    .nav-item:nth-child(6) .nav-link i.fa-list::before {
+        content: "\f07a"; /* Shopping cart icon for orders */
+    }
+
+    .nav-item:nth-child(7) .nav-link i.fa-list::before {
+        content: "\f075"; /* Comment icon for reviews */
+    }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .main-sidebar
+
+    {
+        width: 200px;
+    }
+
+    .brand-link img {
+        max-width: 50px;
+    }
+
+    .brand-text {
+        font-size: 18px;
+    }
+
+    .nav-sidebar .nav-item .nav-link {
+        font-size: 14px;
+    }
+
+    .nav-sidebar .nav-treeview .nav-link {
+        font-size: 13px;
+    }
+
+    .user-panel .image img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .user-panel .info a {
+        font-size: 14px;
+    }
+
+    }
+</style>
+<aside class="main-sidebar sidebar-custom elevation-4 position-fixed">
+    <!-- Brand Logo -->
+    <a class="brand-link" asp-controller="Dashboard" asp-action="Index">
+        <img src="~/logo.png" alt="HomeBook Logo" width="60px">
+        <span class="brand-text font-weight-light ms-2">Quản lý</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex position-fixed bottom-0">
+            <div class="image">
+                <img src="~/logo.png" class="img-circle elevation-2" alt="HomeBook Logo">
+            </div>
+            <div class="info">
+                @{
+                    if (HttpContextAccessor.HttpContext.Session.GetString("AdminLogin") != null)
+                    {
+                        <a href="#" class="d-block">@HttpContextAccessor.HttpContext.Session.GetString("AdminLogin")</a>
+
+                    }
+                    else
+                    {
+                        <a href="#" class="d-block">Quản trị viên</a>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-user-tie fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Tài khoản Admin
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Admins" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Admins" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-user-tie fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý khách hàng
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Customers" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Customers" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-house-user fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý danh mục
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Categories" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Categories" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-house-user fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý sách
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Books" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Books" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-list fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý liên hệ
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Contacts" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Contacts" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-list fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý nhà xuất bản
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Publishers" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Publishers" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-list fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý đơn hàng
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="OrderDetails" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="OrderDetails" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-list fa-xl"></i>
+                            </div>
+                            <p class="ms-3">
+                                Quản lý bình luận
+                                <i class="right fas fa-angle-down"></i>
+                            </p>
+                        </div>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Reviews" asp-action="Index" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Reviews" asp-action="Create" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
